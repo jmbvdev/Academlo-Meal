@@ -2,6 +2,7 @@ const {DataTypes}= require("sequelize")
 // traigo mi conexion a mi base de datos
 const {db}=require("../utils/database")
 
+
 //Utilizamos el metodo define para definir un nuevo modelo
 
 const User=db.define("user", {

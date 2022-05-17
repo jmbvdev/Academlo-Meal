@@ -62,6 +62,8 @@ Order.belongsTo(User)
 
 
 
+
+
 //sync sequilize models
 db.sync()
   .then(() => console.log('Databse sync'))

@@ -1,5 +1,6 @@
 const { Meal } = require("../models/meal.model");
 const { Order } = require("../models/order.model");
+const { Restaurant } = require("../models/restaurant.model");
 const { User } = require("../models/user.model");
 
 const createOrder = async (req, res) => {
@@ -33,8 +34,8 @@ const createOrder = async (req, res) => {
 
 const getOrders = async (req, res) => {
   try {
-    const orders = await Order.findAll({
-      include: [{ model: Meal }, { model: User }],
+    const orders = await Order.findAll({ where:{userId:req.user.id},
+      include: [{ model: Meal, include:{model:Restaurant} }, { model: User }],
     });
     res.status(200).json({
       orders,
@@ -64,10 +65,14 @@ const updateOrder = async (req, res) => {
 const deleteOrder = async (req, res) => {
   const { id } = req.params;
   const order = await Order.findOne({ where: { id } });
-  await order.update({ status: "cancelled" });
-  res.status(200).json({
-    status: "success",
-  });
+  if (order.status==="active") {
+    await order.update({ status: "cancelled" });
+    res.status(200).json({ status: "success" });
+  }
+  else{
+    res.status(400).json({ status: "error" })
+  }
+  
 };
 
 module.exports = { createOrder, getOrders, updateOrder, deleteOrder };

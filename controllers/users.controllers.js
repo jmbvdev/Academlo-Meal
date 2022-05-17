@@ -1,7 +1,11 @@
-const { Order } = require("../models/order.model");
-const { Review } = require("../models/review.model");
-const { User } = require("../models/user.model");
-const jwt = require("jsonwebtoken");
+const { Order } = require('../models/order.model');
+const { Review } = require('../models/review.model');
+const { User } = require('../models/user.model');
+const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv');
+const { validationResult } = require('express-validator');
+const { Meal } = require('../models/meal.model');
+const { Restaurant } = require('../models/restaurant.model');
 
 const createUser = async (req, res) => {
   try {
@@ -19,16 +23,21 @@ const login = async (req, res) => {
     const { email, password } = req.body;
 
     //Validate that User exist with given email
-    const user= await User.findOne({where:{email,password,status:"active"}})
+    const user = await User.findOne({
+      where: { email, password, status: 'active' },
+    });
 
     if (!user) {
-        return res.status(400).json({status:"error", message:"Invalid email or password"})
+      return res
+        .status(400)
+        .json({ status: 'error', message: 'Invalid email or password' });
     }
 
     //Generate JWT
-    const token= await jwt.sign({id:user.id}, "secret",{expiresIn: "365d"})
-    res.status(200).json( {user , token});
-
+    const token = await jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+      expiresIn:process.env.JWT_EXPIRES_IN
+    });
+    res.status(200).json({ token, user });
   } catch (error) {
     console.log(error);
   }
@@ -41,7 +50,7 @@ const updateUser = async (req, res) => {
     const user = await User.findOne({ where: { id } });
 
     await user.update({ name, email });
-    res.status(200).json({ status: "success" });
+    res.status(200).json({ status: 'success' });
   } catch (error) {
     console.log(error);
   }
@@ -51,8 +60,8 @@ const deleteUser = async (req, res) => {
   try {
     const { id } = req.params;
     const user = await User.findOne({ where: { id } });
-    await user.update({ status: "deleted" });
-    res.status(200).json({ status: "success" });
+    await user.update({ status: 'deleted' });
+    res.status(200).json({ status: 'success' });
   } catch (error) {
     console.log(error);
   }
@@ -60,20 +69,9 @@ const deleteUser = async (req, res) => {
 
 const getAllOrders = async (req, res) => {
   try {
-      let token;
-
-      if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
-          token=req.headers.authorization.split("")[1]
-      }
-      if (!token) {
-          return res.status(403).json({status: "error", message: "Session invalid"})  
-      }
-
-
-
-
-    const orders = await User.findAll({
-      include: [{ model: Review }, { model: Order }],
+    
+    const orders = await Order.findAll({where:{userId:req.user.id},
+      include: [{ model: Meal, include:{model:Restaurant} }, { model: User }],
     });
     res.status(200).json({
       orders,

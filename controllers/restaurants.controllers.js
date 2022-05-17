@@ -2,6 +2,7 @@ const { Meal } = require("../models/meal.model");
 const { Restaurant } = require("../models/restaurant.model");
 const { Review } = require("../models/review.model");
 const jwt= require("jsonwebtoken")
+
 const createNewRestaurant = async (req, res) => {
   try {
     const { name, address, rating } = req.body;

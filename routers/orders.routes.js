@@ -1,24 +1,26 @@
-const express = require("express");
+const express = require('express');
 
 const router = express.Router();
 
 //Controllers
-const {createOrder,deleteOrder,updateOrder,getOrders}=require("../controllers/orders.controllers")
+const {
+  createOrder,
+  deleteOrder,
+  updateOrder,
+  getOrders,
+} = require('../controllers/orders.controllers');
+const { validateToken } = require('../middlewares/jsonwebtoken.middleware');
 
 //Crear orden
-router.post("/", createOrder);
+router.post('/', validateToken, createOrder);
 
 //Obtener las ordenes del usuario
-router.get("/me" , getOrders);
+router.get('/me', validateToken, getOrders);
 
 //Actualizar orden
-router.patch("/:id", updateOrder);
+router.patch('/:id', validateToken, updateOrder);
 
 //Eliminar orden
-router.delete("/:id", deleteOrder);
-
-
-
-
+router.delete('/:id', validateToken, deleteOrder);
 
 module.exports = { ordersRouter: router };
