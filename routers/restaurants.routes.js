@@ -14,7 +14,7 @@ const {
   deleteRestaurantReview,
   updateRestaurantReview,
 } = require('../controllers/restaurants.controllers');
-const { validateToken } = require('../middlewares/jsonwebtoken.middleware');
+const { validateToken, protectOwnerAccount } = require('../middlewares/jsonwebtoken.middleware');
 const { checkValidations } = require('../middlewares/validations.middlewares');
 
 //Crear nuevo restaurante
@@ -41,12 +41,12 @@ router.patch('/:id',validateToken, updateRestaurant);
 router.delete('/:id',validateToken, deleteRestaurant);
 
 //Crear nueva reseña del restaurante
-router.post('/reviews/:id',validateToken, createRestaurantReview);
+router.post('/reviews/:id',validateToken, protectOwnerAccount, createRestaurantReview);
 
 //Actualizar reseña del restaurante
-router.patch('/reviews/:id',validateToken, updateRestaurantReview);
+router.patch('/reviews/:id',validateToken, protectOwnerAccount, updateRestaurantReview);
 
 //Eliminar reseña del restaurante
-router.delete('/reviews/:id',validateToken, deleteRestaurantReview);
+router.delete('/reviews/:id',validateToken, protectOwnerAccount, deleteRestaurantReview);
 
 module.exports = { restaurantsRouter: router };

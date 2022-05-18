@@ -30,8 +30,8 @@ const User=db.define("user", {
         defaultValue:"active"
     },
     role:{
-        type:DataTypes.STRING,
-        defaultValue:"normal"
+        type:DataTypes.STRING
+
     }
 })
 module.exports={User}

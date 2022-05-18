@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
+const { User } = require('../models/user.model');
 
 
 const generateToken = async(req,res,next)=>{
@@ -37,7 +38,8 @@ const validateToken= async(req,res,next)=>{
          //validate token
       
         const decoded = await jwt.verify(token, process.env.JWT_SECRET) 
-        req.user=decoded
+        const user= await User.findOne({where:{id:decoded.id}})
+        req.user=user
         next()
     } catch (error) {
         console.log(error)
@@ -45,4 +47,40 @@ const validateToken= async(req,res,next)=>{
 
 }
 
-module.exports={generateToken,validateToken}
+const protectOwnerAccount = async (req,res,next)=>{
+  try {
+    console.log(req.user.role)
+  
+      if (req.user.role!== "admin") {
+     return res
+      .status(403)
+     .json({ status: 'error', message: 'You dont have the admin permission' });
+      }
+  
+    next()
+  } catch (error) {
+    console.log(error)
+  }
+  }
+
+const protectAdmin = async (req,res,next)=>{
+try {
+
+ 
+if (req.user.id===Number(req.params.id)) {
+return next()
+  
+}
+    if (req.user.role!== "admin") {
+   return res
+    .status(403)
+   .json({ status: 'error', message: 'You dont own this account' });
+    }
+
+  next()
+} catch (error) {
+  console.log(error)
+}
+}
+
+module.exports={generateToken,validateToken, protectAdmin, protectOwnerAccount}

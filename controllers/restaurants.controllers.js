@@ -77,7 +77,8 @@ const updateRestaurantReview = async (req, res) => {
   try {
     const { id } = req.params;
     const { comment, rating } = req.body;
-    const review = await Restaurant.findOne({ where: { id } });
+    const review = await Review.findOne({ where: { id } });
+    console.log(review)
 
     await review.update({ comment, rating });
     res.status(200).json({ status: "success" });

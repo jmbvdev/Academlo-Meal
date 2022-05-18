@@ -9,9 +9,9 @@ const { Restaurant } = require('../models/restaurant.model');
 
 const createUser = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password,role } = req.body;
 
-    const newUser = await User.create({ name, email, password });
+    const newUser = await User.create({ name, email, password,role });
     res.status(201).json({ newUser });
   } catch (error) {
     console.log(error);
@@ -46,11 +46,11 @@ const login = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     const { name, email } = req.body;
-    const { id } = req.params;
-    const user = await User.findOne({ where: { id } });
+    const user = await User.findOne({ where: { id:req.user.id } }); 
 
     await user.update({ name, email });
     res.status(200).json({ status: 'success' });
+
   } catch (error) {
     console.log(error);
   }
@@ -58,10 +58,10 @@ const updateUser = async (req, res) => {
 
 const deleteUser = async (req, res) => {
   try {
-    const { id } = req.params;
-    const user = await User.findOne({ where: { id } });
+    const user = await User.findOne({ where: { id:req.user.id } }); 
     await user.update({ status: 'deleted' });
     res.status(200).json({ status: 'success' });
+   
   } catch (error) {
     console.log(error);
   }

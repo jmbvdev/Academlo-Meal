@@ -13,7 +13,7 @@ const {
   getAllOrders,
   getOrderById,
 } = require('../controllers/users.controllers');
-const { validateToken } = require('../middlewares/jsonwebtoken.middleware');
+const { validateToken, protectAdmin } = require('../middlewares/jsonwebtoken.middleware');
 const { checkValidations } = require('../middlewares/validations.middlewares');
 
 //Crear usuario
@@ -38,10 +38,10 @@ router.post(
 router.post('/login', login);
 
 //Actualizar perfil de usuario
-router.patch('/:id',validateToken, updateUser);
+router.patch('/:id',validateToken, protectAdmin,updateUser);
 
 //Deshabilitar cuenta de usuario
-router.delete('/:id',validateToken, deleteUser);
+router.delete('/:id',validateToken, protectAdmin,deleteUser);
 
 //Obtener todas las ordenes hechas por el usuario
 router.get('/orders',validateToken, getAllOrders);
