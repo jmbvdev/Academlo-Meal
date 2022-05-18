@@ -1,4 +1,4 @@
-const { Review } = require("../models/review.model");
+const { Review } = require('../models/review.model');
 
 const createReview = async (req, res) => {
   try {
@@ -32,8 +32,8 @@ const updateReview = async (req, res) => {
     const { id } = req.params;
     const review = await Review.findOne({ where: { id } });
 
-    await review.update({ status: "completed" });
-    res.status(200).json({ status: "success" });
+    await review.update({ status: 'completed' });
+    res.status(200).json({ status: 'success' });
   } catch (error) {
     console.log(error);
   }
@@ -42,9 +42,9 @@ const updateReview = async (req, res) => {
 const deleteReview = async (req, res) => {
   const { id } = req.params;
   const review = await Review.findOne({ where: { id } });
-  await review.update({ status: "cancelled" });
+  await review.update({ status: 'cancelled' });
   res.status(200).json({
-    status: "success",
+    status: 'success',
   });
 };
 

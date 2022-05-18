@@ -1,5 +1,5 @@
-const { Meal } = require("../models/meal.model");
-const { Order } = require("../models/order.model");
+const { Meal } = require('../models/meal.model');
+const { Order } = require('../models/order.model');
 
 const createMeal = async (req, res) => {
   try {
@@ -40,7 +40,7 @@ const updateMeal = async (req, res) => {
     const meal = await Meal.findOne({ where: { id } });
 
     await meal.update({ name, price });
-    res.status(200).json({ status: "success" });
+    res.status(200).json({ status: 'success' });
   } catch (error) {
     console.log(error);
   }
@@ -50,8 +50,8 @@ const deleteMeal = async (req, res) => {
   try {
     const { id } = req.params;
     const meal = await Meal.findOne({ where: { id } });
-    await meal.update({ status: "deleted" });
-    res.status(200).json({ status: "success" });
+    await meal.update({ status: 'deleted' });
+    res.status(200).json({ status: 'success' });
   } catch (error) {
     console.log(error);
   }

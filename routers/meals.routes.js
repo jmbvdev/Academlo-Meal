@@ -11,17 +11,18 @@ const {
   updateMeal,
   deleteMeal,
 } = require('../controllers/meals.controllers');
-const { validateToken, protectAdmin } = require('../middlewares/jsonwebtoken.middleware');
+const {
+  validateToken,
+  protectAdmin,
+} = require('../middlewares/jsonwebtoken.middleware');
 const { checkValidations } = require('../middlewares/validations.middlewares');
 
 //Crear Meal
 router.post(
   '/:id',
   body('name').notEmpty().withMessage('Name cannot be empty'),
-  body('price')
-    .notEmpty()
-    .withMessage('Name cannot be empty'),
-    checkValidations,
+  body('price').notEmpty().withMessage('Name cannot be empty'),
+  checkValidations,
   createMeal
 );
 
@@ -32,9 +33,9 @@ router.get('/', getAllMeals);
 router.get('/:id', getMealById);
 
 //Actualizar Meal
-router.patch('/:id',validateToken, protectAdmin, updateMeal);
+router.patch('/:id', validateToken, protectAdmin, updateMeal);
 
 //Eliminar Meal
-router.delete('/:id',validateToken, protectAdmin, deleteMeal);
+router.delete('/:id', validateToken, protectAdmin, deleteMeal);
 
 module.exports = { mealsRouter: router };

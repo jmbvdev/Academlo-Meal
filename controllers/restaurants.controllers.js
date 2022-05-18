@@ -1,7 +1,7 @@
-const { Meal } = require("../models/meal.model");
-const { Restaurant } = require("../models/restaurant.model");
-const { Review } = require("../models/review.model");
-const jwt= require("jsonwebtoken")
+const { Meal } = require('../models/meal.model');
+const { Restaurant } = require('../models/restaurant.model');
+const { Review } = require('../models/review.model');
+const jwt = require('jsonwebtoken');
 
 const createNewRestaurant = async (req, res) => {
   try {
@@ -44,7 +44,7 @@ const updateRestaurant = async (req, res) => {
     const restaurant = await Restaurant.findOne({ where: { id } });
 
     await restaurant.update({ name, address });
-    res.status(200).json({ status: "success" });
+    res.status(200).json({ status: 'success' });
   } catch (error) {
     console.log(error);
   }
@@ -54,8 +54,8 @@ const deleteRestaurant = async (req, res) => {
   try {
     const { id } = req.params;
     const restaurant = await Restaurant.findOne({ where: { id } });
-    await restaurant.update({ status: "deleted" });
-    res.status(200).json({ status: "success" });
+    await restaurant.update({ status: 'deleted' });
+    res.status(200).json({ status: 'success' });
   } catch (error) {
     console.log(error);
   }
@@ -65,8 +65,13 @@ const createRestaurantReview = async (req, res) => {
   try {
     const { id } = req.params;
     const { comment, rating, userId } = req.body;
-    const restaurant = await Restaurant.findOne({where:{id}})
-    const newReview = await Review.create({ comment, rating, restaurantId:id, userId  });
+    const restaurant = await Restaurant.findOne({ where: { id } });
+    const newReview = await Review.create({
+      comment,
+      rating,
+      restaurantId: id,
+      userId,
+    });
     res.status(201).json({ newReview });
   } catch (error) {
     console.log(error);
@@ -78,10 +83,10 @@ const updateRestaurantReview = async (req, res) => {
     const { id } = req.params;
     const { comment, rating } = req.body;
     const review = await Review.findOne({ where: { id } });
-    console.log(review)
+    console.log(review);
 
     await review.update({ comment, rating });
-    res.status(200).json({ status: "success" });
+    res.status(200).json({ status: 'success' });
   } catch (error) {
     console.log(error);
   }
@@ -91,8 +96,8 @@ const deleteRestaurantReview = async (req, res) => {
   try {
     const { id } = req.params;
     const review = await Restaurant.findOne({ where: { id } });
-    await review.update({ status: "deleted" });
-    res.status(200).json({ status: "success" });
+    await review.update({ status: 'deleted' });
+    res.status(200).json({ status: 'success' });
   } catch (error) {
     console.log(error);
   }

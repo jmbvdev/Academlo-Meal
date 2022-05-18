@@ -9,9 +9,9 @@ const { Restaurant } = require('../models/restaurant.model');
 
 const createUser = async (req, res) => {
   try {
-    const { name, email, password,role } = req.body;
+    const { name, email, password, role } = req.body;
 
-    const newUser = await User.create({ name, email, password,role });
+    const newUser = await User.create({ name, email, password, role });
     res.status(201).json({ newUser });
   } catch (error) {
     console.log(error);
@@ -35,7 +35,7 @@ const login = async (req, res) => {
 
     //Generate JWT
     const token = await jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
-      expiresIn:process.env.JWT_EXPIRES_IN
+      expiresIn: process.env.JWT_EXPIRES_IN,
     });
     res.status(200).json({ token, user });
   } catch (error) {
@@ -46,11 +46,10 @@ const login = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     const { name, email } = req.body;
-    const user = await User.findOne({ where: { id:req.user.id } }); 
+    const user = await User.findOne({ where: { id: req.user.id } });
 
     await user.update({ name, email });
     res.status(200).json({ status: 'success' });
-
   } catch (error) {
     console.log(error);
   }
@@ -58,10 +57,9 @@ const updateUser = async (req, res) => {
 
 const deleteUser = async (req, res) => {
   try {
-    const user = await User.findOne({ where: { id:req.user.id } }); 
+    const user = await User.findOne({ where: { id: req.user.id } });
     await user.update({ status: 'deleted' });
     res.status(200).json({ status: 'success' });
-   
   } catch (error) {
     console.log(error);
   }
@@ -69,9 +67,12 @@ const deleteUser = async (req, res) => {
 
 const getAllOrders = async (req, res) => {
   try {
-    
-    const orders = await Order.findAll({where:{userId:req.user.id},
-      include: [{ model: Meal, include:{model:Restaurant} }, { model: User }],
+    const orders = await Order.findAll({
+      where: { userId: req.user.id },
+      include: [
+        { model: Meal, include: { model: Restaurant } },
+        { model: User },
+      ],
     });
     res.status(200).json({
       orders,
